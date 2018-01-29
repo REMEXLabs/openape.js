@@ -67,16 +67,32 @@ var openAPE = {
 	        
 		}// constructor
 		
-		getContext (path, contextId, successCallback, contentType) {
-	    	
-			   if(isTokenCorrect() && isContextIdCorrect(contextId) ){
+		createContext (path, context, successCallback, contentType) {
+			   if(isTokenCorrect() && isContextCorrect(context)){	
+	httpRequest = getHttpRequest("POST", 
+	path, function(responseText){
+	callback(responseText);
+	}, context,
+	contentType );
+	httpRequest.send(null);
+		   }
+		}
+		
+		getContext (path, contextId, successCallback, undefined, contentType) {
+				   if(isTokenCorrect() && isContextIdCorrect(contextId) ){
 				   let httpRequest= getHttpRequest("GET", path + "/" + contextId, function(responseText) {
 				   successCallback(parse(response));
 				   }, contentType);
 				   httpRequest.send(null);
 				   }
 			   } 
-		    	   
+	
+		updateContext (path, contextId, context, successCallback, contentType) {
+			   if(isTokenCorrect() && isContextCorrect(context) && isContextIdCorrect(contextId) ){
+	httpRequest= createHttpRequest("PUT", path+"/" +contextId, contentType); 
+			   } 
+	}
+		
 		createHttpRequest(verb, path, successCallback, data, contentType) {
 			var request = new XMLHttpRequest();
 			request.open(verb, this.serverUrl + path);
