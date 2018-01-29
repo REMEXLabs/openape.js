@@ -92,6 +92,20 @@ var openAPE = {
 	httpRequest= createHttpRequest("PUT", path+"/" +contextId, contentType); 
 			   } 
 	}
+	
+		   /*
+		    * Function to delete all kind of contexts
+		    * 
+		    */
+		   deleteContext (path, contextId, successCallback) {
+			   
+			    if(isTokenCorrect() && isContextIdCorrect(contextId) ){
+			let httpRequest = createHttpRequest("DELETE", path + "/" + contextId);
+			httpRequest.send(null);
+			    }
+		   }
+
+
 		
 		createHttpRequest(verb, path, successCallback, data, contentType) {
 			var request = new XMLHttpRequest();
