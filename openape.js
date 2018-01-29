@@ -55,19 +55,33 @@ var openAPE = {
 	        }
 
 	        if(isPasswordCorrect(password) && isUsernameCorrect(userName)){
-	        	createHttpRequest("POST", openape.api.tokenPath, function(responseText){
+	    		var data = "grant_type=password&username="+encodeURIComponent(username)+"&password="+encodeURIComponent(password);
+
+	        	var httpRequest = createHttpRequest("POST", openape.api.tokenPath, function(responseText){
 	        		this.token =JSON.parse(responseText).access_token; 
-	        		
-	        	}); 
+	        			        	}, data, 'application/x-www-form-urlencoded'
+ );
+	        	httpRequest.send();
 	        	}
 
 	        
 		}// constructor
 		
-		createHttpRequest(verb, path, successCallback, data) {
+		getContext (path, contextId, successCallback, contentType) {
+	    	
+			   if(isTokenCorrect() && isContextIdCorrect(contextId) ){
+				   let httpRequest= getHttpRequest("GET", path + "/" + contextId, function(responseText) {
+				   successCallback(parse(response));
+				   }, contentType);
+				   httpRequest.send(null);
+				   }
+			   } 
+		    	   
+		createHttpRequest(verb, path, successCallback, data, contentType) {
 			var request = new XMLHttpRequest();
 			request.open(verb, this.serverUrl + path);
-		    xmlHttp.onreadystatechange = function() { 
+		    
+			xmlHttp.onreadystatechange = function() { 
 		        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
 		            successCallback(xmlHttp.responseText);
 		    }
