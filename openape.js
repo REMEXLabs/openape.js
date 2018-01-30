@@ -151,7 +151,9 @@ getContextList(path, successCallback, query, contentType){
 		
 		createHttpRequest(verb, path, successCallback, errorCallback, contentType) {
 			let request = new XMLHttpRequest();
+			let client = this;
 			request.open(verb, this.serverUrl + path);
+			console.log("Token: " + this.token )
 			   if (this.token !== undefined) {
 				   request.setRequestHeader("authorisation, this.token");
 			   }
@@ -171,7 +173,8 @@ console.log("standard contentType");
 			   
 			request.onreadystatechange = function() { 
 		        if (request.readyState == 4 && request.status == 200){
-		            successCallback(request.responseText);
+		            successCallback.call(this, request.responseText);
+		        	successCallback(request.responseText);
 			} 
 		        else if (request.status == 404) {
 				console.log("Error: " + request.status );
