@@ -3,10 +3,10 @@
 * @author Lukas Smirek
 @Version 0.1
 */
-var openAPE_API = {
+let openAPE_API = {
 
 		tokenPath : "/token",
-userContextPath : "api/user-contexts",
+userContextPath : "/api/user-contexts",
 	     taskContextPath : "/api/task-contexts",
 	     equipmentContextPath : "/api/equipment-contexts",
 	     environmentContextPath : "/api/envronment-contexts",
@@ -63,9 +63,7 @@ var openAPE = {
 
 	        if(isPasswordCorrect(password) && isUsernameCorrect(username)){
 	    		var data = "grant_type=password&username="+encodeURIComponent(username)+"&password="+encodeURIComponent(password);
-	    		
-console.log("data: " +data);
-	        	var httpRequest = this.createHttpRequest("POST", openAPE_API.tokenPath  , 
+    			        	var httpRequest = this.createHttpRequest("POST", openAPE_API.tokenPath  , 
 	        			function(responseText){
 	        		this.token =JSON.parse(responseText).access_token; 
 	        			        	}, undefined,   
@@ -78,7 +76,24 @@ console.log("data: " +data);
 		}// constructor
 
 	
-		
+    /**
+     * createUserContext
+		* 
+		* This function is used to upload a user context object to the
+		* OpenAPE server and to associate it with an Id. This Function
+		* relates to ISO/IEC 24752-8 7.2.2
+		* 
+		* @param {UserContext}
+		*            UserContext - The user context that shall be uploaded
+		* @param{string} contentType - the used content-type
+		* @return {object} - A javascript object with all status
+		*         information of the create process
+		*/	      
+createUserContext (userContext, successCallback, errorCallback, contentType) {
+		   return this.createContext(openAPE_API.userContextPath, userContext, successCallback, errorCallback, contentType);
+	   }
+	
+	
 	   /* * getUserContextList
 	    * 
 	    * This function is used to retrieve a list of URIs to accessible
@@ -91,12 +106,12 @@ console.log("data: " +data);
 	    *         information
 	    */
 	   getUserContextList (successCallback, errorCallback, query, contentType) {
-		   return getContextList(openApe_API.userContextPath, successCallback, errorCallback, query, successCallback, errorCallbackcontentType);
+		   return this.getContextList(openAPE_API.userContextPath, successCallback, errorCallback, query, successCallback, errorCallback, contentType);
 	   	}
 
 		createContext (path, context, successCallback, contentType) {
-			   if(isTokenCorrect() && isContextCorrect(context)){	
-	httpRequest = createHttpRequest("POST", 
+			   if(this.isTokenCorrect() && this.isContextCorrect(context)){	
+	let httpRequest = this.createHttpRequest("POST", 
 	path, function(responseText){
 	callback(responseText);
 	}, context,
@@ -106,7 +121,7 @@ console.log("data: " +data);
 		}
 		
 		getContext (path, contextId, successCallback, undefined, contentType) {
-				   if(isTokenCorrect() && isContextIdCorrect(contextId) ){
+				   if(this.isTokenCorrect() && this.isContextIdCorrect(contextId) ){
 				   let httpRequest= createHttpRequest("GET", path + "/" + contextId, function(responseText) {
 				   successCallback(parse(response));
 				   }, contentType);
@@ -115,8 +130,8 @@ console.log("data: " +data);
 			   } 
 	
 		updateContext (path, contextId, context, successCallback, contentType) {
-			   if(isTokenCorrect() && isContextCorrect(context) && isContextIdCorrect(contextId) ){
-	httpRequest= createHttpRequest("PUT", path+"/" +contextId, contentType); 
+			   if(this.isTokenCorrect() && this.isContextCorrect(context) && isContextIdCorrect(contextId) ){
+	httpRequest= this.createHttpRequest("PUT", path+"/" +contextId, contentType); 
 			   } 
 	}
 	
@@ -133,11 +148,11 @@ console.log("data: " +data);
 		   }
 
 getContextList(path, successCallback, query, contentType){
-			   httpRequest = createHttpRequest("GET",path, function(responseText){
-				   
-				successCallback(parse(responseText));   
-			   }, contentType);
+			   let httpRequest = this.createHttpRequest("GET",path, function(responseText){
+				   				successCallback(this.parse(responseText, contentType));   
+			   });
 			   httpRequest.send(null);
+			   return httpRequest;
 		   }
 		   
 		   parse(responseText, contentType){
@@ -155,7 +170,7 @@ getContextList(path, successCallback, query, contentType){
 			request.open(verb, this.serverUrl + path);
 			console.log("Token: " + this.token )
 			   if (this.token !== undefined) {
-				   request.setRequestHeader("authorisation, this.token");
+				   request.setRequestHeader("Authorization", this.token);
 			   }
 			   
 			   if(contentType == "application/json"  || contentType == "application/x-www-form-urlencoded"){
@@ -173,16 +188,15 @@ console.log("standard contentType");
 			   
 			request.onreadystatechange = function() { 
 		        if (request.readyState == 4 && request.status == 200){
-		            successCallback.call(this, request.responseText);
-		        	successCallback(request.responseText);
+		            successCallback.call(client, request.responseText);
+//		        	successCallback(request.responseText);
 			} 
 		        else if (request.status == 404) {
 				console.log("Error: " + request.status );
 			} else {
 				console.log("readyState: " +request.readyState  );
 				console.log("HTTP: " +request.status  );
-				console.log("Error: " + request.responseText);
-			} 
+							} 
 			};
 		   return request;
 			
@@ -252,5 +266,10 @@ function isUsernameCorrect(username) {
 }
 
 
-console.log("starting");
+
 //var myClient = new Client("daniel","ich","http://localhost:4567");
+class UserContext {
+	constructor() {
+		this.contexts;
+	}
+}

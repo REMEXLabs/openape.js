@@ -1,0 +1,24 @@
+{
+  "name": "openape.js",
+  "version": "0.1.0",
+  "description": "Provides an OpenAPE client and a library with example contexts",
+  "main": "openape.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/REMEXLabs/openape.js.git"
+  },
+  "keywords": [
+    "openape",
+    "accessibility",
+    "personalisation"
+  ],
+  "author": "Lukas Smirek",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/REMEXLabs/openape.js/issues"
+  },
+  "homepage": "https://github.com/REMEXLabs/openape.js#readme"
+}
