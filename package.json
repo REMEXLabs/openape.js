@@ -1,6 +1,6 @@
 {
   "name": "openape.js",
-  "version": "0.1.0",
+  "version": "2.0.0-SNAPSHOT",
   "description": "Provides an OpenAPE client and a library with example contexts",
   "main": "openape.js",
   "scripts": {

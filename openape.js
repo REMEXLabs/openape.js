@@ -92,38 +92,61 @@ var openAPE = {
 createUserContext (userContext, successCallback, errorCallback, contentType) {
 		   return this.createContext(openAPE_API.userContextPath, userContext, successCallback, errorCallback, contentType);
 	   }
-	
-	
+
+/**
+* getUserContext
+* 
+* This function can be used to retrieve a certain user context from
+* the OpenAPE server with a given Id It relates to ISO/ICE 24752-8
+* 7.2.3
+* 
+* @param {string}
+*            userContextId - The Id of the stored UserContext that
+*            shall be retrieved
+* @param {String}
+*            outputType - defines the dataformat of the received
+*            user context object. Can either be JSON or XML
+* @return {Object} - A javascript object with all user contexts
+*         information
+*/
+getUserContext (userContextId, successCallback, errorCallback, contentType) {
+	return this.getContext(openAPE_API.userContextPath, userContextId, successCallback, errorCallback, contentType);
+}
+
 	   /* * getUserContextList
 	    * 
 	    * This function is used to retrieve a list of URIs to accessible
 	    * user contexts This Function relates to ISO/IEC 24752-8 7.2.6
-	    * 
-	    * @param {string}
-	    *            query - the query to filter the relevant contexts
+	    *@p aram {function successCallback
+	    *@param {function} errorCallback
+	    * @param {string}  query - the query to filter the relevant contexts
 	    * @param{string} contentType - the used content-type
-	    * @return {object} - A javascript object with all status
+	    * @return {XmlHttpRequest} - A javascript object with all status
 	    *         information
 	    */
 	   getUserContextList (successCallback, errorCallback, query, contentType) {
-		   return this.getContextList(openAPE_API.userContextPath, successCallback, errorCallback, query, successCallback, errorCallback, contentType);
+		   return this.getContextList(openAPE_API.userContextPath, successCallback, errorCallback, query, contentType);
 	   	}
 
-		createContext (path, context, successCallback, contentType) {
+		createContext (path, context, successCallback, errorCallback, contentType) {
 			   if(this.isTokenCorrect() && this.isContextCorrect(context)){	
 	let httpRequest = this.createHttpRequest("POST", 
 	path, function(responseText){
-	callback(responseText);
-	}, context,
+	successCallback(responseText);
+	}, errorCallback,
 	contentType );
-	httpRequest.send(null);
+	console.log("context" + context)
+	if (contentType == "application/json"){
+		context = JSON.stringify( context); 
+	}
+	httpRequest.send(context);
 		   }
 		}
 		
-		getContext (path, contextId, successCallback, undefined, contentType) {
+		getContext (path, contextId, successCallback, errorCallBack, contentType) {
 				   if(this.isTokenCorrect() && this.isContextIdCorrect(contextId) ){
-				   let httpRequest= createHttpRequest("GET", path + "/" + contextId, function(responseText) {
-				   successCallback(parse(response));
+				   let httpRequest= this.createHttpRequest("GET", path + "/" + contextId, function(responseText) {
+				   successCallback(this.parse(responseText));
 				   }, contentType);
 				   httpRequest.send(null);
 				   }
@@ -147,9 +170,10 @@ createUserContext (userContext, successCallback, errorCallback, contentType) {
 			    }
 		   }
 
-getContextList(path, successCallback, query, contentType){
+getContextList(path, successCallback, errorCallback, query, contentType){
 			   let httpRequest = this.createHttpRequest("GET",path, function(responseText){
-				   				successCallback(this.parse(responseText, contentType));   
+				   console.log				("text: " + responseText);
+				   successCallback(this.parse(responseText, contentType));   
 			   });
 			   httpRequest.send(null);
 			   return httpRequest;
@@ -157,6 +181,12 @@ getContextList(path, successCallback, query, contentType){
 		   
 		   parse(responseText, contentType){
 			   var result;
+			   if (contentType === undefined){
+				   contentType = this.defaultContentType;
+			   			   }
+			   
+			   console.log("ct: " + contentType);
+			   
 			   if (contentType == "application/json"){
 				   result = JSON.parse(responseText);
 			   }
@@ -167,13 +197,13 @@ getContextList(path, successCallback, query, contentType){
 		createHttpRequest(verb, path, successCallback, errorCallback, contentType) {
 			let request = new XMLHttpRequest();
 			let client = this;
-			request.open(verb, this.serverUrl + path);
-			console.log("Token: " + this.token )
+			request.open(verb, this.serverUrl + path, false);
+			
 			   if (this.token !== undefined) {
 				   request.setRequestHeader("Authorization", this.token);
 			   }
 			   
-			   if(contentType == "application/json"  || contentType == "application/x-www-form-urlencoded"){
+			   if(contentType == "application/json"  || contentType == "application/x-www-form-urlencoded" || contentType == "application/xml"){
 			   console.log("contentType: " + contentType);
 				   request.setRequestHeader("Content-type", contentType);
 			   }else { 
@@ -182,21 +212,26 @@ console.log("standard contentType");
 			}
 			   
 			   request.onload = function () {
-				   console.log(request.responseURL); // http://example.com/test
+//				   console.log(request.responseURL); // http://example.com/test
 				 };
 
 			   
-			request.onreadystatechange = function() { 
-		        if (request.readyState == 4 && request.status == 200){
+			request.onreadystatechange = function() {
+				if ( request.readyState == 4 ){
+		        console.log("http: " + request.status)
+					if ( request.status == 200  || request.status == 201){
 		            successCallback.call(client, request.responseText);
 //		        	successCallback(request.responseText);
 			} 
 		        else if (request.status == 404) {
 				console.log("Error: " + request.status );
-			} else {
+			} else if (request.status == 400)  {
 				console.log("readyState: " +request.readyState  );
 				console.log("HTTP: " +request.status  );
+				console.log("Error:" + request.statusText)
+				console.log("Servermessage:" + request.responseText)
 							} 
+				}
 			};
 		   return request;
 			

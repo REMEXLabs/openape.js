@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Test openape.js</title>
+<script src="openape.js"></script>
+<script src="iso_24752_examples.js"></script>
+<script>
+var myApp = new Client("daniel", "ich", "http://localhost:4567");
+
+setTimeout(
+function(){
+console.log("jetzt listen:");
+myApp.getUserContextList( function(responseText) { console.log(responseText); }, function() {console.log("scheise");});
+let userContext = iso_24752_examples.getExample1();
+myApp.createUserContext(userContext, function(responseText) {console.log("id: " + responseText);});
+let simple = iso_24752_examples.getSimple();
+myApp.createUserContext(simple,function(responseText) {console.log("id: " + responseText);}, undefined, "");
+myApp.createUserContext({},function(responseText) {console.log("id: " + responseText);}, undefined);
+xml = iso_24752_examples.getXml();
+myApp.createUserContext(xml,function(responseText) {
+console.log("id: " + responseText);
+myApp.getUserContext(responseText, function(userContext){
+console.log("got: " + JSON.stringify(userContext));
+});
+}, undefined, "application/xml");
+var list;
+ myApp.getUserContextList(function(responseText){console.log("list:"+ responseText);}); 
+}
+, 1);
+
+</script>
+</head>
+<body>
+
+</body>
+</html>
