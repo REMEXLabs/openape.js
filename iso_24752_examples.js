@@ -14,3 +14,9 @@ var iso_24752_examples = {
 					}
 }
 	
+
+var openape_examples = {
+getXmlPublicExample: function() {
+return ' <?xml version="1.0" encoding="UTF-8" standalone="yes"?><user-context>	<implementation-parameters public="true" />	<option id="default">		<name>Default preferences</name>		<preference key="http://registry.gpii.net/common/magnifierEnabled"			value="false" />		<preference			key="http://registry.gpii.net/applications/org.chrome.cloud4chrome/invertColours"			value="false" />	</option></user-context>';
+}
+}

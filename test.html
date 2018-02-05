@@ -24,6 +24,18 @@ myApp.getUserContext(responseText, function(userContext){
 console.log("got: " + JSON.stringify(userContext));
 });
 }, undefined, "application/xml");
+
+var xmlPublic = openape_examples.getXmlPublicExample();
+/*myApp.createUserContext(xmlPublic,function(responseText) {
+console.log("id: " + responseText);
+myApp.getUserContext(responseText, function(userContext){
+console.log("got: " + JSON.stringify(userContext));
+});
+}, undefined, "application/xml");
+*/
+
+
+
 var list;
  myApp.getUserContextList(function(responseText){console.log("list:"+ responseText);}); 
 }
