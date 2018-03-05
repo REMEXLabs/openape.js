@@ -1,7 +1,7 @@
 # Welcome to OpenAPE.js
 
 OpenAPE.JS is a java script client to the OpenHAB server that can be integrated in your web application in order to adjust the user interface to the individual needs and preferences of the user. The client handles all the communication with the server and provides functions to get and manipulate context information.
-For further information about OpenAPE se [https://www.github.com/REMEXLabs/OpenAPE](https://www.github.com/REMEXLabs/OpenAPE.).
+For further information about OpenAPE se [https://github.com/REMEXLabs/OpenAPE](https://github.com/REMEXLabs/OpenAPE.).
 
 ## Licence and Copyright 
 
