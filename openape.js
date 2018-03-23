@@ -1,7 +1,7 @@
 /**
 
 * @author Lukas Smirek
-@Version 0.1
+@Version 2.0.0_SNAPSHOT
 */
 let openAPE_API = {
 
@@ -28,7 +28,7 @@ var openAPE = {
 	     * @return {boolean}
 	*/
 	createUser : function (username, email, password, serverurl) {
-
+console.log("sUrl: " + serverurl  );
 		if(serverurl === undefined){
 			servrUrl = openAPE_API.openApeServerUrl;
 		} 
@@ -53,20 +53,22 @@ var openAPE = {
 	constructor(username, password, serverUrl) {
 		this.	defaultContentType = "application/json";
 		this.token;
+		console.log("serUrl: " + serverUrl);
 		if(serverUrl === undefined){
-	            this.serverUrl =openAPE_API.openapeServerUrl;
+	           
+			this.serverUrl =openAPE_API.openapeServerUrl;
 	        } else if(serverUrl === "/"){
 	            this.serverUrl =  window.location.protocol;
 	        } else {
 	            this.serverUrl = serverUrl;
 	        }
-
+console.log("url: " + this.serverUrl); 
 	        if(isPasswordCorrect(password) && isUsernameCorrect(username)){
 	    		var data = "grant_type=password&username="+encodeURIComponent(username)+"&password="+encodeURIComponent(password);
     			        	var httpRequest = this.createHttpRequest("POST", openAPE_API.tokenPath  , 
 	        			function(responseText){
-	        		this.token =JSON.parse(responseText).access_token; 
-	        			        	}, undefined,   
+					this.token =JSON.parse(responseText).access_token; 
+												}, undefined,   
 	        			        	'application/x-www-form-urlencoded'
  );
 	        	httpRequest.send(data);
@@ -113,6 +115,15 @@ getUserContext (userContextId, successCallback, errorCallback, contentType) {
 	return this.getContext(openAPE_API.userContextPath, userContextId, successCallback, errorCallback, contentType);
 }
 
+updateUserContext(userContextId, userContext, successCallback, errorCallback, contentType){
+	return this.updateContext(openAPE_API.userContextPath, userContextId, userContext, successCallback, errorCallback, contentType); 
+}
+
+deleteUserContext(userContextId){
+	this.deleteContext(openAPE_API.userContextPath, userContextId, successCallback, errorCallback);
+}
+
+
 	   /* * getUserContextList
 	    * 
 	    * This function is used to retrieve a list of URIs to accessible
@@ -135,7 +146,7 @@ getUserContext (userContextId, successCallback, errorCallback, contentType) {
 	successCallback(responseText);
 	}, errorCallback,
 	contentType );
-	console.log("context" + context)
+//	console.log("context" + context)
 	if (contentType == "application/json"){
 		context = JSON.stringify( context); 
 	}
@@ -185,7 +196,7 @@ getContextList(path, successCallback, errorCallback, query, contentType){
 				   contentType = this.defaultContentType;
 			   			   }
 			   
-			   console.log("ct: " + contentType);
+//			   console.log("ct: " + contentType);
 			   
 			   if (contentType == "application/json"){
 				   result = JSON.parse(responseText);
@@ -197,6 +208,7 @@ getContextList(path, successCallback, errorCallback, query, contentType){
 		createHttpRequest(verb, path, successCallback, errorCallback, contentType) {
 			let request = new XMLHttpRequest();
 			let client = this;
+console.log ("Url: " + this.serverUrl + path );
 			request.open(verb, this.serverUrl + path, false);
 			
 			   if (this.token !== undefined) {
@@ -204,10 +216,10 @@ getContextList(path, successCallback, errorCallback, query, contentType){
 			   }
 			   
 			   if(contentType == "application/json"  || contentType == "application/x-www-form-urlencoded" || contentType == "application/xml"){
-			   console.log("contentType: " + contentType);
+//			   console.log("contentType: " + contentType);
 				   request.setRequestHeader("Content-type", contentType);
 			   }else { 
-console.log("standard contentType");
+//console.log("standard contentType");
 			   request.setRequestHeader("Content-type", this.defaultContentType);
 			}
 			   
