@@ -53,16 +53,17 @@ console.log("sUrl: " + serverurl  );
 	constructor(username, password, serverUrl) {
 		this.	defaultContentType = "application/json";
 		this.token;
-		console.log("serUrl: " + serverUrl);
+		
 		if(serverUrl === undefined){
-	           
-			this.serverUrl =openAPE_API.openapeServerUrl;
+	         
+			this.serverUrl = openAPE_API.openApeServerUrl;
+						
 	        } else if(serverUrl === "/"){
 	            this.serverUrl =  window.location.protocol;
 	        } else {
 	            this.serverUrl = serverUrl;
 	        }
-console.log("url: " + this.serverUrl); 
+console.log("Connection will be established with server: " + this.serverUrl); 
 	        if(isPasswordCorrect(password) && isUsernameCorrect(username)){
 	    		var data = "grant_type=password&username="+encodeURIComponent(username)+"&password="+encodeURIComponent(password);
     			        	var httpRequest = this.createHttpRequest("POST", openAPE_API.tokenPath  , 
