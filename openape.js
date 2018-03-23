@@ -165,10 +165,13 @@ deleteUserContext(userContextId){
 			   } 
 	
 		updateContext (path, contextId, context, successCallback, contentType) {
-			   if(this.isTokenCorrect() && this.isContextCorrect(context) && isContextIdCorrect(contextId) ){
-	httpRequest= this.createHttpRequest("PUT", path+"/" +contextId, contentType); 
-			   } 
-	}
+			   if(this.isTokenCorrect() && this.isContextCorrect(context) && this.isContextIdCorrect(contextId) ){
+let 	httpRequest= this.createHttpRequest("PUT", path+"/" +contextId, contentType); 
+return httpRequest;
+			   }
+			   
+
+		}
 	
 		   /*
 		    * Function to delete all kind of contexts

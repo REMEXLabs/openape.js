@@ -3,10 +3,25 @@
  */
 var iso_24752_examples = {
 		getSimple : function() {
-			return '{"default": {}}';
-		},
+return {default: {name : "", preferences: {} }};
+					},
+		
+		getSimpleAsPublic : function() {
+			var context = this.getSimple();
+			context["implementation-parameters"] = {public: true};
+			return context;
+								},
+		
+		
 		getExample1 : function() {
 			return JSON.parse('{  "default": {    "preferences":       { "http://terms.gpii.net/speech-output": "true" }  }}');
+					},
+					
+					
+					getExample1asPublic : function() {
+					var context = this.getExample1()
+					context[implementation-parameters] = {public: true};
+					return context;
 					},
 					getXml: function() {
 					return '<user-context>		<option id="default">				<preference key="http://terms.gpii.net/speech-output" value="true"/>			</option>			</user-context>			';

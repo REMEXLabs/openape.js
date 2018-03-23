@@ -6,18 +6,34 @@
 <script src="openape.js"></script>
 <script src="iso_24752_examples.js"></script>
 <script>
-var myApp = new Client("daniel", "ich", "http://localhost:4567");
+var myApp = new Client("daniel", "ich");//,"http://localhost:4567");
 
 setTimeout(
 function(){
 console.log("jetzt listen:");
-myApp.getUserContextList( function(responseText) { console.log(responseText); }, function() {console.log("scheise");});
+myApp.getUserContextList( function(responseText) { console.log("public context list: " + responseText); }, function() {console.log("requesting public context lists failed");});
+
+
 let userContext = iso_24752_examples.getExample1();
-myApp.createUserContext(userContext, function(responseText) {console.log("id: " + responseText);});
-let simple = iso_24752_examples.getSimple();
-myApp.createUserContext(simple,function(responseText) {console.log("id: " + responseText);}, undefined, "");
-myApp.createUserContext({},function(responseText) {console.log("id: " + responseText);}, undefined);
+//myApp.createUserContext(userContext, function(responseText) {console.log("id: " + responseText);});
+
+console.log("empty json");
+myApp.createUserContext("{}",function(responseText) {console.log("id: " + responseText);}, undefined);
+
+
+
+let simple = JSON.stringify(iso_24752_examples.getSimple());
+console.log(simple);
+myApp.createUserContext(simple,function(responseText) {console.log("simple id: " + responseText);}, function() {console.log("fehler simple")});
+
+console.log("simple public");
+let simplePublic = JSON.stringify(iso_24752_examples.getSimpleAsPublic());
+console.log(simplePublic);
+ myApp.createUserContext(simplePublic ,function(responseText) {console.log("id: " + responseText);}, undefined, "");
+
 xml = iso_24752_examples.getXml();
+
+/*
 myApp.createUserContext(xml,function(responseText) {
 console.log("id: " + responseText);
 myApp.getUserContext(responseText, function(userContext){
@@ -26,7 +42,7 @@ console.log("got: " + JSON.stringify(userContext));
 }, undefined, "application/xml");
 
 var xmlPublic = openape_examples.getXmlPublicExample();
-/*myApp.createUserContext(xmlPublic,function(responseText) {
+myApp.createUserContext(xmlPublic,function(responseText) {
 console.log("id: " + responseText);
 myApp.getUserContext(responseText, function(userContext){
 console.log("got: " + JSON.stringify(userContext));
