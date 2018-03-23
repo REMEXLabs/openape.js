@@ -69,7 +69,8 @@ console.log("Connection will be established with server: " + this.serverUrl);
     			        	var httpRequest = this.createHttpRequest("POST", openAPE_API.tokenPath  , 
 	        			function(responseText){
 					this.token =JSON.parse(responseText).access_token; 
-												}, undefined,   
+							console.log("gottoken");					
+    			        	}, undefined,   
 	        			        	'application/x-www-form-urlencoded'
  );
 	        	httpRequest.send(data);
@@ -164,9 +165,18 @@ deleteUserContext(userContextId){
 				   }
 			   } 
 	
-		updateContext (path, contextId, context, successCallback, contentType) {
+		updateContext (path, contextId, context, successCallback, errorCallback, contentType) {
 			   if(this.isTokenCorrect() && this.isContextCorrect(context) && this.isContextIdCorrect(contextId) ){
-let 	httpRequest= this.createHttpRequest("PUT", path+"/" +contextId, contentType); 
+let 	httpRequest= this.createHttpRequest("PUT", path+"/" +contextId, 
+successCallback,
+				  errorCallback,
+				 contentType );
+
+			if (contentType == "application/json"){
+					context = JSON.stringify( context); 
+				}
+				httpRequest.send(context);
+				
 return httpRequest;
 			   }
 			   
