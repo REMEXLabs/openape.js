@@ -1,336 +1,487 @@
 /**
-
-* @author Lukas Smirek
-@Version 2.0.0_SNAPSHOT
-*/
+ * @author Lukas Smirek
+ * @Version 2.0.0_SNAPSHOT
+ */
 let openAPE_API = {
-
-		tokenPath : "/token",
-userContextPath : "/api/user-contexts",
-	     taskContextPath : "/api/task-contexts",
-	     equipmentContextPath : "/api/equipment-contexts",
-	     environmentContextPath : "/api/envronment-contexts",
-	      		openApeServerUrl : "http://openape.gpii.eu"
+    tokenPath: "/token",
+    userContextPath: "/api/user-contexts",
+    taskContextPath: "/api/task-contexts",
+    equipmentContextPath: "/api/equipment-contexts",
+    environmentContextPath: "/api/environment-contexts",
+    openApeServerUrl: "http://openape.gpii.eu",
+    defaultContentType: "JSON"
 };
 
 var openAPE = {
 
     // FUNCTIONS FOR USER management
 
-	    /** createUser
-	     * 
-	     * This function is used to create a new OpenAPE account with the given username, email and password
-	     *
-	     * @param  {String} - userName - The username of the user 
-	     * @param  {string} email - The email address of the user 
-	     * @param  {string} password - The password of the user 
-	     *@param {string} [serverURL=http://openape.gpii.eu]- URL of the server to which the client connects.  
-	     * @return {boolean}
-	*/
-	createUser : function (username, email, password, serverurl) {
-console.log("sUrl: " + serverurl  );
-		if(serverurl === undefined){
-			servrUrl = openAPE_API.openApeServerUrl;
-		} 
+    /** createUser
+     *
+     * This function is used to create a new OpenAPE account with the given username, email and password.
+     *
+     * @param {string} username - The username of the user.
+     * @param {string} email - The email address of the user.
+     * @param {string} password - The password of the user.
+     * @param {string} [serverUrl="http://openape.gpii.eu"] - URL of the server to which the client connects.
+     * @returns {boolean}
+     */
+    createUser: function (username, email, password, serverUrl = openAPE_API.openApeServerUrl) {
+        var objUser = {};
 
-		var objUser = new Object();
-		
-		var arrRoles = [];
-		arrRoles.push("user");
-		objUser.roles = arrRoles;
+        var arrRoles = [];
+        arrRoles.push("user");
+        objUser.roles = arrRoles;
 
-		if(isPasswordCorrect(password) && isEmailCorrect(eMail) && isUsernameCorrect(userName)){
-			
-		}
+        if (isPasswordCorrect(password) && isEmailCorrect(email) && isUsernameCorrect(username)) {
 
-		
+        }
 
 
-	} // createUser
-}
-	class Client {
-    	
-	constructor(username, password, serverUrl) {
-		this.	defaultContentType = "application/json";
-		this.token;
-		
-		if(serverUrl === undefined){
-	         
-			this.serverUrl = openAPE_API.openApeServerUrl;
-						
-	        } else if(serverUrl === "/"){
-	            this.serverUrl =  window.location.protocol;
-	        } else {
-	            this.serverUrl = serverUrl;
-	        }
-console.log("Connection will be established with server: " + this.serverUrl); 
-	        if(isPasswordCorrect(password) && isUsernameCorrect(username)){
-	    		var data = "grant_type=password&username="+encodeURIComponent(username)+"&password="+encodeURIComponent(password);
-    			        	var httpRequest = this.createHttpRequest("POST", openAPE_API.tokenPath  , 
-	        			function(responseText){
-					this.token =JSON.parse(responseText).access_token; 
-							console.log("gottoken");					
-    			        	}, undefined,   
-	        			        	'application/x-www-form-urlencoded'
- );
-	        	httpRequest.send(data);
-	        	}
+    } // createUser
+};
 
-	        
-		}// constructor
+class Client {
 
-	
+    /**
+     * constructor
+     *
+     * Creates a new client for the given login data.
+     *
+     * @param {string} username - The username used to login.
+     * @param {string} password - The password used to login.
+     * @param {string} [serverUrl="http://openape.gpii.eu"] - The URL of the server to connect to.
+     * @param {string} [defaultContentType="JSON"] - The content type to be used a default. Can be "JSON" or "XML".
+     */
+    constructor(username, password, serverUrl = openAPE_API.openApeServerUrl, defaultContentType = openAPE_API.defaultContentType) {
+        this.defaultContentType = "application/json";
+        this.token = null;
+        this.serverUrl = "/" ? window.location.protocol : serverUrl;
+        this.defaultContentType = defaultContentType;
+
+        console.log("Connection will be established with server: " + this.serverUrl);
+        if (isPasswordCorrect(password) && isUsernameCorrect(username)) {
+            var data = "grant_type=password&username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password);
+            var httpRequest = this.createHttpRequest("POST", openAPE_API.tokenPath,
+                function (responseText) {
+                    this.token = JSON.parse(responseText)["access_token"];
+                    console.log("got token");
+                }, null, "application/x-www-form-urlencoded");
+            httpRequest.send(data);
+        }
+
+
+    }// constructor
+
+
     /**
      * createUserContext
-		* 
-		* This function is used to upload a user context object to the
-		* OpenAPE server and to associate it with an Id. This Function
-		* relates to ISO/IEC 24752-8 7.2.2
-		* 
-		* @param {UserContext}
-		*            UserContext - The user context that shall be uploaded
-		* @param{string} contentType - the used content-type
-		* @return {object} - A javascript object with all status
-		*         information of the create process
-		*/	      
-createUserContext (userContext, successCallback, errorCallback, contentType) {
-		   return this.createContext(openAPE_API.userContextPath, userContext, successCallback, errorCallback, contentType);
-	   }
+     *
+     * This function is used to upload a user context object to the OpenAPE server and to associate it with an ID.
+     * This function relates to ISO/IEC 24752-8 7.2.2.
+     *
+     * @param {object} userContext - The UserContext that shall be uploaded.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with all status  information of the create process.
+     */
+    createUserContext(userContext, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.createContext(openAPE_API.userContextPath, userContext, successCallback, errorCallback, contentType);
+    }
+
+    /**
+     * getUserContext
+     *
+     * This function can be used to retrieve a certain user context from the OpenAPE server with a given ID.
+     * It relates to ISO/ICE 24752-8 7.2.3.
+     *
+     * @param {string} userContextId - The ID of the stored UserContext that shall be retrieved.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with all user contexts information.
+     */
+    getUserContext(userContextId, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.getContext(openAPE_API.userContextPath, userContextId, successCallback, errorCallback, contentType);
+    }
+
+    /**
+     * updateUserContext
+     *
+     * This function can be used to update a certain user context from the OpenAPE server with a given ID.
+     * It relates to ISO/ICE 24752-8 7.2.3.
+     *
+     * @param {string} userContextId - The ID of the stored UserContext that shall be updated.
+     * @param {object} userContext - The UserContext that shall be uploaded.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with all user contexts information.
+     */
+    updateUserContext(userContextId, userContext, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.updateContext(openAPE_API.userContextPath, userContextId, userContext, successCallback, errorCallback, contentType);
+    }
+
+    /**
+     * deleteUserContext
+     *
+     * This function can be used to delete a certain user context from the OpenAPE server with a given ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {string} userContextId - The ID of the stored UserContext that shall be updated.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @returns {object} - A JavaScript object with all user contexts information.
+     */
+    deleteUserContext(userContextId, successCallback, errorCallback) {
+        return this.deleteContext(openAPE_API.userContextPath, userContextId, successCallback, errorCallback);
+    }
+
+
+    /**
+     * getUserContextList
+     *
+     * This function is used to retrieve a list of URIs to accessible user contexts.
+     * This function relates to ISO/IEC 24752-8 7.2.6.
+     *
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} query - The query to filter the relevant contexts.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with all status information
+     */
+    getUserContextList(successCallback, errorCallback, query, contentType = this.defaultContentType) {
+        return this.getContextList(openAPE_API.userContextPath, successCallback, errorCallback, query, contentType);
+    }
+
+    /**
+     * createContext
+     *
+     * This function is used to create a new context at the given path.
+     *
+     * @param {string} path - The API path used to create the context.
+     * @param {object} context - The context to be created.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     */
+    createContext(path, context, successCallback, errorCallback, contentType = this.defaultContentType) {
+        if (this.isTokenCorrect() && this.isContextCorrect(context)) {
+            let httpRequest = this.createHttpRequest("POST",
+                path, function (responseText) {
+                    successCallback(responseText);
+                }, errorCallback,
+                contentType);
+            if (contentType == "application/json") {
+                context = JSON.stringify(context);
+            }
+            httpRequest.send(context);
+        }
+    }
+
+    /**
+     * getContext
+     *
+     * This function is used to retrieve a context with a given ID.
+     *
+     * @param {string} path - The API path used to retrieved the context.
+     * @param {string} contextId - The ID of the context to be retrieved.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     */
+    getContext(path, contextId, successCallback, errorCallback, contentType = this.defaultContentType) {
+        if (this.isTokenCorrect() && this.isContextIdCorrect(contextId)) {
+            let httpRequest = this.createHttpRequest("GET", path + "/" + contextId, function (responseText) {
+                successCallback(this.parse(responseText));
+            }, errorCallback, contentType);
+            httpRequest.send(null);
+        }
+    }
+
+    /**
+     * updateContext
+     *
+     * This function is used to update a context with a given ID.
+     *
+     * @param {string} path - The API path used to the context to be updated.
+     * @param {string} contextId - The ID of the context to be updated.
+     * @param {object} context - The context to be updated.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     */
+    updateContext(path, contextId, context, successCallback, errorCallback, contentType = this.defaultContentType) {
+        if (this.isTokenCorrect() && this.isContextCorrect(context) && this.isContextIdCorrect(contextId)) {
+            let httpRequest = this.createHttpRequest("PUT", path + "/" + contextId, successCallback, errorCallback, contentType);
+
+            if (contentType == "application/json") {
+                context = JSON.stringify(context);
+            }
+
+            httpRequest.send(context);
+        }
+    }
+
+    /**
+     * deleteContext
+     *
+     * This function is used to delete a context with a given ID.
+     *
+     * @param {string} path - The API path used to the context to be deleted.
+     * @param {string} contextId - The ID of the context to be deleted.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     */
+    deleteContext(path, contextId, successCallback, errorCallback) {
+        let httpRequest;
+        if (this.isTokenCorrect() && this.isContextIdCorrect(contextId)) {
+            httpRequest = this.createHttpRequest("DELETE", path + "/" + contextId, successCallback, errorCallback);
+            httpRequest.send(null);
+        }
+    }
+
+    /**
+     * getContextList
+     *
+     * This function is used to get the context list.
+     *
+     * @param {string} path - The API path used to get the context list.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} query - The query to filter the relevant contexts.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     */
+    getContextList(path, successCallback, errorCallback, query, contentType = this.defaultContentType) {
+        let httpRequest = this.createHttpRequest("GET", path, (responseText) => {
+            console.log("text: " + responseText);
+            successCallback(this.parse(responseText, contentType));
+        }, errorCallback);
+        httpRequest.send(null);
+    }
+
+    /**
+     * parse
+     *
+     * This function is used to parse the response text.
+     *
+     * @param {string} responseText - The received response that should be parsed.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - The parsed result.
+     */
+    parse(responseText, contentType = this.defaultContentType) {
+        var result;
+
+        if (contentType == "application/json") {
+            result = JSON.parse(responseText);
+        }
+
+        return result;
+    }
+
+
+    /**
+     * createHttpRequest
+     *
+     * This function is used to create a new HTTP request.
+     *
+     * @param {string} verb - The type of request to be used, e.g. POST or GET.
+     * @param {string} path - The server path to be requested.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {XMLHttpRequest} - The created request.
+     */
+    createHttpRequest(verb, path, successCallback, errorCallback, contentType = this.defaultContentType) {
+        let request = new XMLHttpRequest();
+        let client = this;
+        console.log("Url: " + this.serverUrl + path);
+        request.open(verb, this.serverUrl + path, false);
+
+        if (this.token !== undefined) {
+            request.setRequestHeader("Authorization", this.token);
+        }
+
+        if (contentType == "application/json" || contentType == "application/x-www-form-urlencoded" || contentType == "application/xml") {
+//			   console.log("contentType: " + contentType);
+            request.setRequestHeader("Content-Type", contentType);
+        } else {
+//console.log("standard contentType");
+            request.setRequestHeader("Content-Type", this.defaultContentType);
+        }
+
+        request.onload = function () {
+//				   console.log(request.responseURL); // http://example.com/test
+        };
+
+
+        request.onreadystatechange = function () {
+            if (request.readyState == 4) {
+                console.log("http: " + request.status);
+                if (request.status == 200 || request.status == 201) {
+                    successCallback.call(client, request.responseText);
+//		        	successCallback(request.responseText);
+                }
+                else if (request.status == 404) {
+                    console.log("Error: " + request.status);
+                } else if (request.status == 400) {
+                    console.log("readyState: " + request.readyState);
+                    console.log("HTTP: " + request.status);
+                    console.log("Error:" + request.statusText);
+                    console.log("Server message:" + request.responseText)
+                }
+            }
+        };
+        return request;
+
+    }
+
+    /**
+     * isTokenCorrect
+     *
+     * This function checks the correctness of the given token.
+     *
+     * @returns {boolean} - Whether the token is correct or not.
+     */
+    isTokenCorrect() {
+        let isTokenCorrect = true;
+        if (this.token === undefined) {
+            console.log("Please initialize the library");
+            isTokenCorrect = false;
+        }
+        return isTokenCorrect;
+    }
+
+    /**
+     * isContextIdCorrect
+     *
+     * This function checks the correctness of the given context ID.
+     *
+     * @param {string} contextId  - The context ID to be checked.
+     * @returns {boolean} - Whether the context ID is correct or not.
+     */
+    isContextIdCorrect(contextId) {
+        let isContextIdCorrect = true;
+        if (contextId == "") {
+            console.log("The contextId can not be empty");
+            isContextIdCorrect = false;
+        } else if (contextId === undefined) {
+            console.log("Please enter a contextId");
+            isContextIdCorrect = false;
+        }
+
+        return isContextIdCorrect;
+    }
+
+    /**
+     * isContextCorrect
+     *
+     * This function checks the correctness of the given context.
+     *
+     * @param {Object} context - The context to be checked.
+     * @returns {boolean} - Whether the context is correct or not.
+     */
+    isContextCorrect(context) {
+        var isContextCorrect = true;
+        if (context == "") {
+            arrStatusText.push("The context can not be empty");
+            isContextCorrect = false;
+        } else if (context === undefined) {
+            arrStatusText.push("Please enter a context");
+            isContextCorrect = false;
+        }
+        return isContextCorrect;
+    }
+
+
+}// client
 
 /**
-* getUserContext
-* 
-* This function can be used to retrieve a certain user context from
-* the OpenAPE server with a given Id It relates to ISO/ICE 24752-8
-* 7.2.3
-* 
-* @param {string}
-*            userContextId - The Id of the stored UserContext that
-*            shall be retrieved
-* @param {String}
-*            outputType - defines the dataformat of the received
-*            user context object. Can either be JSON or XML
-* @return {Object} - A javascript object with all user contexts
-*         information
-*/
-getUserContext (userContextId, successCallback, errorCallback, contentType) {
-	return this.getContext(openAPE_API.userContextPath, userContextId, successCallback, errorCallback, contentType);
-}
-
-updateUserContext(userContextId, userContext, successCallback, errorCallback, contentType){
-	return this.updateContext(openAPE_API.userContextPath, userContextId, userContext, successCallback, errorCallback, contentType); 
-}
-
-deleteUserContext(userContextId){
-	this.deleteContext(openAPE_API.userContextPath, userContextId, successCallback, errorCallback);
-}
-
-
-	   /* * getUserContextList
-	    * 
-	    * This function is used to retrieve a list of URIs to accessible
-	    * user contexts This Function relates to ISO/IEC 24752-8 7.2.6
-	    *@p aram {function successCallback
-	    *@param {function} errorCallback
-	    * @param {string}  query - the query to filter the relevant contexts
-	    * @param{string} contentType - the used content-type
-	    * @return {XmlHttpRequest} - A javascript object with all status
-	    *         information
-	    */
-	   getUserContextList (successCallback, errorCallback, query, contentType) {
-		   return this.getContextList(openAPE_API.userContextPath, successCallback, errorCallback, query, contentType);
-	   	}
-
-		createContext (path, context, successCallback, errorCallback, contentType) {
-			   if(this.isTokenCorrect() && this.isContextCorrect(context)){	
-	let httpRequest = this.createHttpRequest("POST", 
-	path, function(responseText){
-	successCallback(responseText);
-	}, errorCallback,
-	contentType );
-//	console.log("context" + context)
-	if (contentType == "application/json"){
-		context = JSON.stringify( context); 
-	}
-	httpRequest.send(context);
-		   }
-		}
-		
-		getContext (path, contextId, successCallback, errorCallBack, contentType) {
-				   if(this.isTokenCorrect() && this.isContextIdCorrect(contextId) ){
-				   let httpRequest= this.createHttpRequest("GET", path + "/" + contextId, function(responseText) {
-				   successCallback(this.parse(responseText));
-				   }, contentType);
-				   httpRequest.send(null);
-				   }
-			   } 
-	
-		updateContext (path, contextId, context, successCallback, errorCallback, contentType) {
-			   if(this.isTokenCorrect() && this.isContextCorrect(context) && this.isContextIdCorrect(contextId) ){
-let 	httpRequest= this.createHttpRequest("PUT", path+"/" +contextId, 
-successCallback,
-				  errorCallback,
-				 contentType );
-
-			if (contentType == "application/json"){
-					context = JSON.stringify( context); 
-				}
-				httpRequest.send(context);
-				
-return httpRequest;
-			   }
-			   
-
-		}
-	
-		   /*
-		    * Function to delete all kind of contexts
-		    * 
-		    */
-		   deleteContext (path, contextId, successCallback) {
-			   
-			    if(isTokenCorrect() && isContextIdCorrect(contextId) ){
-			let httpRequest = createHttpRequest("DELETE", path + "/" + contextId);
-			httpRequest.send(null);
-			    }
-		   }
-
-getContextList(path, successCallback, errorCallback, query, contentType){
-			   let httpRequest = this.createHttpRequest("GET",path, function(responseText){
-				   console.log				("text: " + responseText);
-				   successCallback(this.parse(responseText, contentType));   
-			   });
-			   httpRequest.send(null);
-			   return httpRequest;
-		   }
-		   
-		   parse(responseText, contentType){
-			   var result;
-			   if (contentType === undefined){
-				   contentType = this.defaultContentType;
-			   			   }
-			   
-//			   console.log("ct: " + contentType);
-			   
-			   if (contentType == "application/json"){
-				   result = JSON.parse(responseText);
-			   }
-			   return result;
-		   }
-
-		
-		createHttpRequest(verb, path, successCallback, errorCallback, contentType) {
-			let request = new XMLHttpRequest();
-			let client = this;
-console.log ("Url: " + this.serverUrl + path );
-			request.open(verb, this.serverUrl + path, false);
-			
-			   if (this.token !== undefined) {
-				   request.setRequestHeader("Authorization", this.token);
-			   }
-			   
-			   if(contentType == "application/json"  || contentType == "application/x-www-form-urlencoded" || contentType == "application/xml"){
-//			   console.log("contentType: " + contentType);
-				   request.setRequestHeader("Content-type", contentType);
-			   }else { 
-//console.log("standard contentType");
-			   request.setRequestHeader("Content-type", this.defaultContentType);
-			}
-			   
-			   request.onload = function () {
-//				   console.log(request.responseURL); // http://example.com/test
-				 };
-
-			   
-			request.onreadystatechange = function() {
-				if ( request.readyState == 4 ){
-		        console.log("http: " + request.status)
-					if ( request.status == 200  || request.status == 201){
-		            successCallback.call(client, request.responseText);
-//		        	successCallback(request.responseText);
-			} 
-		        else if (request.status == 404) {
-				console.log("Error: " + request.status );
-			} else if (request.status == 400)  {
-				console.log("readyState: " +request.readyState  );
-				console.log("HTTP: " +request.status  );
-				console.log("Error:" + request.statusText)
-				console.log("Servermessage:" + request.responseText)
-							} 
-				}
-			};
-		   return request;
-			
-			}
-		
-		isTokenCorrect(){
-			   let isTokenCorrect = true;
-	if (this.token === undefined){
-	console.log("Please initialize the library");
-				   isTokenCorrect = false;
-			   } 
-			   return isTokenCorrect;
-		   }	    	
-
-	isContextIdCorrect(contextId){
-			   let isContextIdCorrect = true;
-			   if(contextId==""){
-	console.log("The contextId can not be empty");
-				   isContextIdCorrect = false;
-			   } else if(contextId === undefined){
-	console.log("Please enter a contextId");
-				   isContextIdCorrect = false;
-			   }
-		    		    	
-			   return isContextIdCorrect;
-		   }
-		    	
-	isContextCorrect(context){
-			   var isContextCorrect = true;
-			   if(context==""){
-				   arrStatusText.push("The context can not be empty");
-				   isContextCorrect = false;
-			   } else if(context === undefined){
-				   arrStatusText.push("Please enter a context");
-				   isContextCorrect = false;
-			   }
-			   return isContextCorrect;	    	
-		   }
-
-	
-	}// client
-
+ * isPasswordCorrect
+ *
+ * This function checks the correctness of the given password.
+ *
+ * @param {string} password - The password to be checked.
+ * @returns {boolean} - Whether the password is correct or not.
+ */
 function isPasswordCorrect(password) {
-   	var isPasswordCorrect = true;
-   	if(password==""){
-   		console.log("Password can not be empty");
-   		isPasswordCorrect = false;
-   	} else if(password === undefined){
-   		console.log("Please enter a password");
-   		isPasswordCorrect = false;
-   	}
-return isPasswordCorrect;
-   	
+    var isPasswordCorrect = true;
+    if (password == "") {
+        console.log("Password can not be empty");
+        isPasswordCorrect = false;
+    } else if (password === undefined) {
+        console.log("Please enter a password");
+        isPasswordCorrect = false;
+    }
+    return isPasswordCorrect;
+
 }
-		
+
+/**
+ * isUsernameCorrect
+ *
+ * This function checks the correctness of the given username.
+ *
+ * @param {string} username - The username to be checked.
+ * @returns {boolean} - Whether the username is correct or not.
+ */
 function isUsernameCorrect(username) {
-   	var isUsernameCorrect = true;
-   	if(username == ""){
-   		arrStatusText.push("Username can not be empty");
-   		isUsernameCorrect = false;
-   	} else if(username === undefined){
-   		console.log("Please enter a username");
-   		isUsernameCorrect = false;
-   	}
-   	return isUsernameCorrect
+    var isUsernameCorrect = true;
+    if (username == "") {
+        arrStatusText.push("Username can not be empty");
+        isUsernameCorrect = false;
+    } else if (username === undefined) {
+        console.log("Please enter a username");
+        isUsernameCorrect = false;
+    }
+    return isUsernameCorrect
 
 }
 
+/**
+ * isEmailCorrect
+ *
+ * This function checks the correctness of the given email address.
+ *
+ * @param {string} email - The email address to be checked.
+ * @returns {boolean} - Whether the address is correct or not.
+ */
+function isEmailCorrect(email) {
+    var isEmailCorrect = true;
+
+    if (email == "") {
+        arrStatusText.push("Email address can not be empty");
+        isEmailCorrect = false;
+    } else if (email === undefined) {
+        console.log("Please enter an email address");
+        isEmailCorrect = false;
+    } else {
+        var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if (!regex.test(String(email).toLowerCase())) {
+            console.log("Please check the format of the email address");
+            isEmailCorrect = false;
+        }
+    }
 
 
-//var myClient = new Client("daniel","ich","http://localhost:4567");
+    return isEmailCorrect
+}
+
+
 class UserContext {
-	constructor() {
-		this.contexts;
-	}
+    constructor() {
+        this.contexts = null;
+    }
 }
