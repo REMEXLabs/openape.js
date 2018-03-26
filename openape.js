@@ -73,6 +73,7 @@ class Client {
 
     }// constructor
 
+    //// mark - create methods ////
 
     /**
      * createUserContext
@@ -80,7 +81,7 @@ class Client {
      * This function is used to upload a user context object to the OpenAPE server and to associate it with an ID.
      * This function relates to ISO/IEC 24752-8 7.2.2.
      *
-     * @param {object} userContext - The UserContext that shall be uploaded.
+     * @param {object} userContext - The user context that shall be uploaded.
      * @param {function} successCallback - The function to be called on success.
      * @param {function} errorCallback - The function to be called on error.
      * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
@@ -92,21 +93,127 @@ class Client {
     }
 
     /**
+     * createTaskContext
+     *
+     * This function is used to upload a task context object to the OpenAPE server and to associate it with an ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {object} taskContext - The task context that shall be uploaded.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with all status information of the create process.
+     */
+    createTaskContext(taskContext, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.createContext(openAPE_API.taskContextPath, taskContext, successCallback, errorCallback, contentType);
+    }
+
+    /**
+     * createEquipmentContext
+     *
+     * This function is used to upload an equipment context object to the OpenAPE server and to associate it with an ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {object} equipmentContext - The equipment context that shall be uploaded.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with all status information of the create process.
+     */
+    createEquipmentContext(equipmentContext, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.createContext(openAPE_API.equipmentContextPath, equipmentContext, successCallback, errorCallback, contentType);
+    }
+
+    /**
+     * createEnvironmentContext
+     *
+     * This function is used to upload an environment context object to the OpenAPE server and to associate it with an ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {object} environmentContext - The environment context that shall be uploaded.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with all status information of the create process.
+     */
+    createEnvironmentContext(environmentContext, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.createContext(openAPE_API.environmentContextPath, environmentContext, successCallback, errorCallback, contentType);
+    }
+
+    //// mark - get methods ////
+
+    /**
      * getUserContext
      *
      * This function can be used to retrieve a certain user context from the OpenAPE server with a given ID.
      * It relates to ISO/ICE 24752-8 7.2.3.
      *
-     * @param {string} userContextId - The ID of the stored UserContext that shall be retrieved.
+     * @param {string} userContextId - The ID of the stored user context that shall be retrieved.
      * @param {function} successCallback - The function to be called on success.
      * @param {function} errorCallback - The function to be called on error.
      * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
      * should not be used. Can be "JSON" or "XML".
-     * @returns {object} - A JavaScript object with all user contexts information.
+     * @returns {object} - A JavaScript object with the user context's information.
      */
     getUserContext(userContextId, successCallback, errorCallback, contentType = this.defaultContentType) {
         return this.getContext(openAPE_API.userContextPath, userContextId, successCallback, errorCallback, contentType);
     }
+
+    /**
+     * getTaskContext
+     *
+     * This function can be used to retrieve a certain task context from the OpenAPE server with a given ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {string} taskContextId - The ID of the stored task context that shall be retrieved.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with the task context's information.
+     */
+    getTaskContext(taskContextId, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.getContext(openAPE_API.taskContextPath, taskContextId, successCallback, errorCallback, contentType);
+    }
+
+    /**
+     * getEquipmentContext
+     *
+     * This function can be used to retrieve a certain equipment context from the OpenAPE server with a given ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {string} equipmentContextId - The ID of the stored equipment context that shall be retrieved.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with the equipment context's information.
+     */
+    getEquipmentContext(equipmentContextId, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.getContext(openAPE_API.equipmentContextPath, equipmentContextId, successCallback, errorCallback, contentType);
+    }
+
+    /**
+     * getEnvironmentContext
+     *
+     * This function can be used to retrieve a certain environment context from the OpenAPE server with a given ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {string} environmentContextId - The ID of the stored environment context that shall be retrieved.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with the environment context's information.
+     */
+    getEnvironmentContext(environmentContextId, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.getContext(openAPE_API.environmentContextPath, environmentContextId, successCallback, errorCallback, contentType);
+    }
+
+    //// mark - update methods ////
 
     /**
      * updateUserContext
@@ -114,17 +221,73 @@ class Client {
      * This function can be used to update a certain user context from the OpenAPE server with a given ID.
      * It relates to ISO/ICE 24752-8 7.2.3.
      *
-     * @param {string} userContextId - The ID of the stored UserContext that shall be updated.
-     * @param {object} userContext - The UserContext that shall be uploaded.
+     * @param {string} userContextId - The ID of the stored user context that shall be updated.
+     * @param {object} userContext - The user context that shall be uploaded.
      * @param {function} successCallback - The function to be called on success.
      * @param {function} errorCallback - The function to be called on error.
      * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
      * should not be used. Can be "JSON" or "XML".
-     * @returns {object} - A JavaScript object with all user contexts information.
+     * @returns {object} - A JavaScript object with the user context's information.
      */
     updateUserContext(userContextId, userContext, successCallback, errorCallback, contentType = this.defaultContentType) {
         return this.updateContext(openAPE_API.userContextPath, userContextId, userContext, successCallback, errorCallback, contentType);
     }
+
+    /**
+     * updateTaskContext
+     *
+     * This function can be used to update a certain task context from the OpenAPE server with a given ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {string} taskContextId - The ID of the stored task context that shall be updated.
+     * @param {object} taskContext - The task context that shall be uploaded.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with the task context's information.
+     */
+    updateTaskContext(taskContextId, taskContext, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.updateContext(openAPE_API.taskContextPath, taskContextId, taskContext, successCallback, errorCallback, contentType);
+    }
+
+    /**
+     * updateEquipmentContext
+     *
+     * This function can be used to update a certain equipment context from the OpenAPE server with a given ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {string} equipmentContextId - The ID of the stored equipment context that shall be updated.
+     * @param {object} equipmentContext - The equipment context that shall be uploaded.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with the equipment context's information.
+     */
+    updateEquipmentContext(equipmentContextId, equipmentContext, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.updateContext(openAPE_API.equipmentContextPath, equipmentContextId, equipmentContext, successCallback, errorCallback, contentType);
+    }
+
+    /**
+     * updateEnvironmentContext
+     *
+     * This function can be used to update a certain environment context from the OpenAPE server with a given ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {string} environmentContextId - The ID of the stored environment context that shall be updated.
+     * @param {object} environmentContext - The environment context that shall be uploaded.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with the environment context's information.
+     */
+    updateEnvironmentContext(environmentContextId, environmentContext, successCallback, errorCallback, contentType = this.defaultContentType) {
+        return this.updateContext(openAPE_API.environmentContextPath, environmentContextId, environmentContext, successCallback, errorCallback, contentType);
+    }
+
+    //// mark - delete methods ////
 
     /**
      * deleteUserContext
@@ -132,15 +295,61 @@ class Client {
      * This function can be used to delete a certain user context from the OpenAPE server with a given ID.
      * TODO: Is ISO/IEC reference applicable here?
      *
-     * @param {string} userContextId - The ID of the stored UserContext that shall be updated.
+     * @param {string} userContextId - The ID of the stored user context that shall be updated.
      * @param {function} successCallback - The function to be called on success.
      * @param {function} errorCallback - The function to be called on error.
-     * @returns {object} - A JavaScript object with all user contexts information.
+     * @returns {object} - A JavaScript object with the user context's information.
      */
     deleteUserContext(userContextId, successCallback, errorCallback) {
         return this.deleteContext(openAPE_API.userContextPath, userContextId, successCallback, errorCallback);
     }
 
+    /**
+     * deleteTaskContext
+     *
+     * This function can be used to delete a certain task context from the OpenAPE server with a given ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {string} taskContextId - The ID of the stored task context that shall be updated.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @returns {object} - A JavaScript object with the task context's information.
+     */
+    deleteTaskContext(taskContextId, successCallback, errorCallback) {
+        return this.deleteContext(openAPE_API.taskContextPath, taskContextId, successCallback, errorCallback);
+    }
+
+    /**
+     * deleteEquipmentContext
+     *
+     * This function can be used to delete a certain equipment context from the OpenAPE server with a given ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {string} equipmentContextId - The ID of the stored equipment context that shall be updated.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @returns {object} - A JavaScript object with the equipment context's information.
+     */
+    deleteEquipmentContext(equipmentContextId, successCallback, errorCallback) {
+        return this.deleteContext(openAPE_API.equipmentContextPath, equipmentContextId, successCallback, errorCallback);
+    }
+
+    /**
+     * deleteEnvironmentContext
+     *
+     * This function can be used to delete a certain environment context from the OpenAPE server with a given ID.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {string} environmentContextId - The ID of the stored environment context that shall be updated.
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @returns {object} - A JavaScript object with the environment context's information.
+     */
+    deleteEnvironmentContext(environmentContextId, successCallback, errorCallback) {
+        return this.deleteContext(openAPE_API.environmentContextPath, environmentContextId, successCallback, errorCallback);
+    }
+
+    //// mark - getList methods ////
 
     /**
      * getUserContextList
@@ -153,11 +362,64 @@ class Client {
      * @param {string} query - The query to filter the relevant contexts.
      * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
      * should not be used. Can be "JSON" or "XML".
-     * @returns {object} - A JavaScript object with all status information
+     * @returns {object} - A JavaScript object with all user contexts information.
      */
     getUserContextList(successCallback, errorCallback, query, contentType = this.defaultContentType) {
         return this.getContextList(openAPE_API.userContextPath, successCallback, errorCallback, query, contentType);
     }
+
+    /**
+     * getTaskContextList
+     *
+     * This function is used to retrieve a list of URIs to accessible task contexts.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} query - The query to filter the relevant contexts.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with all task contexts information.
+     */
+    getTaskContextList(successCallback, errorCallback, query, contentType = this.defaultContentType) {
+        return this.getContextList(openAPE_API.taskContextPath, successCallback, errorCallback, query, contentType);
+    }
+
+    /**
+     * getEquipmentContextList
+     *
+     * This function is used to retrieve a list of URIs to accessible equipment contexts.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} query - The query to filter the relevant contexts.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with all equipment contexts information.
+     */
+    getEquipmentContextList(successCallback, errorCallback, query, contentType = this.defaultContentType) {
+        return this.getContextList(openAPE_API.equipmentContextPath, successCallback, errorCallback, query, contentType);
+    }
+
+    /**
+     * getEnvironmentContextList
+     *
+     * This function is used to retrieve a list of URIs to accessible environment contexts.
+     * TODO: Is ISO/IEC reference applicable here?
+     *
+     * @param {function} successCallback - The function to be called on success.
+     * @param {function} errorCallback - The function to be called on error.
+     * @param {string} query - The query to filter the relevant contexts.
+     * @param {string} [contentType="JSON"] - The content type to be used if the default set in the client
+     * should not be used. Can be "JSON" or "XML".
+     * @returns {object} - A JavaScript object with all environment contexts information.
+     */
+    getEnvironmentContextList(successCallback, errorCallback, query, contentType = this.defaultContentType) {
+        return this.getContextList(openAPE_API.environmentContextPath, successCallback, errorCallback, query, contentType);
+    }
+
+    //// mark - generic methods ////
 
     /**
      * createContext
@@ -268,6 +530,8 @@ class Client {
         }, errorCallback);
         httpRequest.send(null);
     }
+
+    //// mark - misc helper methods ////
 
     /**
      * parse
