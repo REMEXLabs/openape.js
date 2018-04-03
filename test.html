@@ -35,11 +35,14 @@ xml = iso_24752_examples.getXml();
 
 /*
 myApp.createUserContext(xml,function(responseText) {
-console.log("id: " + responseText);
-myApp.getUserContext(responseText, function(userContext){
+var id = responseText;
+console.log("id: " + id );
+myApp.getUserContext(id, function(userContext){
 console.log("got: " + JSON.stringify(userContext));
+myApp.updateUserContext(id, {}, function () {console.log("update");}, function(){console.log("update failed");})
 });
 }, undefined, "application/xml");
+
 
 var xmlPublic = openape_examples.getXmlPublicExample();
 myApp.createUserContext(xmlPublic,function(responseText) {
