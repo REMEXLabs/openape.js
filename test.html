@@ -1,66 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Test openape.js</title>
-<script src="openape.js"></script>
-<script src="iso_24752_examples.js"></script>
-<script>
-var myApp = new Client("daniel", "ich");//,"http://localhost:4567");
+    <meta charset="ISO-8859-1">
+    <title>Test OpenApe.js</title>
+    <script src="openape.js"></script>
+    <script src="iso_24752_examples.js"></script>
+    <script>
+        let myApp = new Client("daniel", "ich");//,"http://localhost:4567");
 
-setTimeout(
-function(){
-console.log("jetzt listen:");
-myApp.getUserContextList( function(responseText) { console.log("public context list: " + responseText); }, function() {console.log("requesting public context lists failed");});
+        setTimeout(
+            function () {
+                console.log("jetzt listen:");
+                myApp.getUserContextList((responseText) => {
+                    console.log("public context list: " + responseText);
+                }, () => {
+                    console.log("requesting public context lists failed");
+                }, "");
 
 
-let userContext = iso_24752_examples.getExample1();
+                let userContext = iso_24752_examples.getExample1();
 //myApp.createUserContext(userContext, function(responseText) {console.log("id: " + responseText);});
 
-console.log("empty json");
-myApp.createUserContext("{}",function(responseText) {console.log("id: " + responseText);}, undefined);
+
+                console.log("empty json");
+                myApp.createUserContext("{}", (responseText) => {
+                    console.log("id: " + responseText);
+                }, null);
 
 
+                let simple = JSON.stringify(iso_24752_examples.getSimple());
+                console.log(simple);
+                myApp.createUserContext(simple, (responseText) => {
+                    console.log("simple id: " + responseText);
+                }, () => {
+                    console.log("fehler simple")
+                });
 
-let simple = JSON.stringify(iso_24752_examples.getSimple());
-console.log(simple);
-myApp.createUserContext(simple,function(responseText) {console.log("simple id: " + responseText);}, function() {console.log("fehler simple")});
+                console.log("simple public");
+                let simplePublic = JSON.stringify(iso_24752_examples.getSimpleAsPublic());
+                console.log(simplePublic);
+                myApp.createUserContext(simplePublic, (responseText) => {
+                    console.log("id: " + responseText);
+                }, null, "");
 
-console.log("simple public");
-let simplePublic = JSON.stringify(iso_24752_examples.getSimpleAsPublic());
-console.log(simplePublic);
- myApp.createUserContext(simplePublic ,function(responseText) {console.log("id: " + responseText);}, undefined, "");
+                let xml = iso_24752_examples.getXml();
 
-xml = iso_24752_examples.getXml();
+                /*
+                myApp.createUserContext(xml,function(responseText) {
+                console.log("id: " + responseText);
+                myApp.getUserContext(responseText, function(userContext){
+                console.log("got: " + JSON.stringify(userContext));
+                });
+                }, undefined, "application/xml");
 
-/*
-myApp.createUserContext(xml,function(responseText) {
-var id = responseText;
-console.log("id: " + id );
-myApp.getUserContext(id, function(userContext){
-console.log("got: " + JSON.stringify(userContext));
-myApp.updateUserContext(id, {}, function () {console.log("update");}, function(){console.log("update failed");})
-});
-}, undefined, "application/xml");
-
-
-var xmlPublic = openape_examples.getXmlPublicExample();
-myApp.createUserContext(xmlPublic,function(responseText) {
-console.log("id: " + responseText);
-myApp.getUserContext(responseText, function(userContext){
-console.log("got: " + JSON.stringify(userContext));
-});
-}, undefined, "application/xml");
-*/
+                var xmlPublic = openape_examples.getXmlPublicExample();
+                myApp.createUserContext(xmlPublic,function(responseText) {
+                console.log("id: " + responseText);
+                myApp.getUserContext(responseText, function(userContext){
+                console.log("got: " + JSON.stringify(userContext));
+                });
+                }, undefined, "application/xml");
+                */
 
 
+                let list;
+                myApp.getUserContextList((responseText) => {
+                    console.log("list:" + responseText);
+                }, (responseText) => {
+                    console.log("error getting user context list:" + responseText);
+                }, "");
+            }, 1);
 
-var list;
- myApp.getUserContextList(function(responseText){console.log("list:"+ responseText);}); 
-}
-, 1);
-
-</script>
+    </script>
 </head>
 <body>
 
