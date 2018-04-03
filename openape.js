@@ -56,7 +56,6 @@ class Client {
     constructor(username, password, serverUrl = openAPE_API.openApeServerUrl, defaultContentType = openAPE_API.defaultContentType) {
         this.defaultContentType = "application/json";
         this.token = null;
-        this.serverUrl = "/" ? window.location.protocol : serverUrl;
         this.defaultContentType = defaultContentType;
 
         console.log("Connection will be established with server: " + this.serverUrl);
