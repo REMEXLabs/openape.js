@@ -78,7 +78,7 @@ class Client {
      * createUserContext
      *
      * This function is used to upload a user context object to the OpenAPE server and to associate it with an ID.
-     * This function relates to ISO/IEC 24752-8 7.2.2.
+     * It relates to ISO/IEC 24752-8 7.2.2.
      *
      * @param {object} userContext - The user context that shall be uploaded.
      * @param {function} successCallback - The function to be called on success.
@@ -95,7 +95,7 @@ class Client {
      * createTaskContext
      *
      * This function is used to upload a task context object to the OpenAPE server and to associate it with an ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/IEC 24752-8 7.3.2.
      *
      * @param {object} taskContext - The task context that shall be uploaded.
      * @param {function} successCallback - The function to be called on success.
@@ -112,7 +112,7 @@ class Client {
      * createEquipmentContext
      *
      * This function is used to upload an equipment context object to the OpenAPE server and to associate it with an ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/IEC 24752-8 7.4.2.
      *
      * @param {object} equipmentContext - The equipment context that shall be uploaded.
      * @param {function} successCallback - The function to be called on success.
@@ -129,7 +129,7 @@ class Client {
      * createEnvironmentContext
      *
      * This function is used to upload an environment context object to the OpenAPE server and to associate it with an ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/IEC 24752-8 7.5.2.
      *
      * @param {object} environmentContext - The environment context that shall be uploaded.
      * @param {function} successCallback - The function to be called on success.
@@ -165,7 +165,7 @@ class Client {
      * getTaskContext
      *
      * This function can be used to retrieve a certain task context from the OpenAPE server with a given ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/ICE 24752-8 7.3.3.
      *
      * @param {string} taskContextId - The ID of the stored task context that shall be retrieved.
      * @param {function} successCallback - The function to be called on success.
@@ -182,7 +182,7 @@ class Client {
      * getEquipmentContext
      *
      * This function can be used to retrieve a certain equipment context from the OpenAPE server with a given ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/IEC 24752-8 7.4.3.
      *
      * @param {string} equipmentContextId - The ID of the stored equipment context that shall be retrieved.
      * @param {function} successCallback - The function to be called on success.
@@ -199,7 +199,7 @@ class Client {
      * getEnvironmentContext
      *
      * This function can be used to retrieve a certain environment context from the OpenAPE server with a given ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/IEC 24752-8 7.5.3.
      *
      * @param {string} environmentContextId - The ID of the stored environment context that shall be retrieved.
      * @param {function} successCallback - The function to be called on success.
@@ -212,13 +212,14 @@ class Client {
         return this.getContext(openAPE_API.environmentContextPath, environmentContextId, successCallback, errorCallback, contentType);
     }
 
+
     //// mark - update methods ////
 
     /**
      * updateUserContext
      *
      * This function can be used to update a certain user context from the OpenAPE server with a given ID.
-     * It relates to ISO/ICE 24752-8 7.2.3.
+     * It relates to ISO/ICE 24752-8 7.2.4.
      *
      * @param {string} userContextId - The ID of the stored user context that shall be updated.
      * @param {object} userContext - The user context that shall be uploaded.
@@ -236,7 +237,7 @@ class Client {
      * updateTaskContext
      *
      * This function can be used to update a certain task context from the OpenAPE server with a given ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/ICE 24752-8 7.3.4.
      *
      * @param {string} taskContextId - The ID of the stored task context that shall be updated.
      * @param {object} taskContext - The task context that shall be uploaded.
@@ -254,7 +255,7 @@ class Client {
      * updateEquipmentContext
      *
      * This function can be used to update a certain equipment context from the OpenAPE server with a given ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/IEC 24752-8 7.4.4.
      *
      * @param {string} equipmentContextId - The ID of the stored equipment context that shall be updated.
      * @param {object} equipmentContext - The equipment context that shall be uploaded.
@@ -272,7 +273,7 @@ class Client {
      * updateEnvironmentContext
      *
      * This function can be used to update a certain environment context from the OpenAPE server with a given ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/IEC 24752-8 7.5.4.
      *
      * @param {string} environmentContextId - The ID of the stored environment context that shall be updated.
      * @param {object} environmentContext - The environment context that shall be uploaded.
@@ -292,7 +293,7 @@ class Client {
      * deleteUserContext
      *
      * This function can be used to delete a certain user context from the OpenAPE server with a given ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/ICE 24752-8 7.2.5.
      *
      * @param {string} userContextId - The ID of the stored user context that shall be updated.
      * @param {function} successCallback - The function to be called on success.
@@ -307,7 +308,7 @@ class Client {
      * deleteTaskContext
      *
      * This function can be used to delete a certain task context from the OpenAPE server with a given ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/ICE 24752-8 7.3.5.
      *
      * @param {string} taskContextId - The ID of the stored task context that shall be updated.
      * @param {function} successCallback - The function to be called on success.
@@ -322,7 +323,7 @@ class Client {
      * deleteEquipmentContext
      *
      * This function can be used to delete a certain equipment context from the OpenAPE server with a given ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/IEC 24752-8 7.4.5.
      *
      * @param {string} equipmentContextId - The ID of the stored equipment context that shall be updated.
      * @param {function} successCallback - The function to be called on success.
@@ -337,7 +338,7 @@ class Client {
      * deleteEnvironmentContext
      *
      * This function can be used to delete a certain environment context from the OpenAPE server with a given ID.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/IEC 24752-8 7.5.5.
      *
      * @param {string} environmentContextId - The ID of the stored environment context that shall be updated.
      * @param {function} successCallback - The function to be called on success.
@@ -354,7 +355,7 @@ class Client {
      * getUserContextList
      *
      * This function is used to retrieve a list of URIs to accessible user contexts.
-     * This function relates to ISO/IEC 24752-8 7.2.6.
+     * It relates to ISO/IEC 24752-8 7.2.6.
      *
      * @param {function} successCallback - The function to be called on success.
      * @param {function} errorCallback - The function to be called on error.
@@ -371,7 +372,7 @@ class Client {
      * getTaskContextList
      *
      * This function is used to retrieve a list of URIs to accessible task contexts.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/ICE 24752-8 7.3.6.
      *
      * @param {function} successCallback - The function to be called on success.
      * @param {function} errorCallback - The function to be called on error.
@@ -388,7 +389,7 @@ class Client {
      * getEquipmentContextList
      *
      * This function is used to retrieve a list of URIs to accessible equipment contexts.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/IEC 24752-8 7.4.6.
      *
      * @param {function} successCallback - The function to be called on success.
      * @param {function} errorCallback - The function to be called on error.
@@ -405,7 +406,7 @@ class Client {
      * getEnvironmentContextList
      *
      * This function is used to retrieve a list of URIs to accessible environment contexts.
-     * TODO: Is ISO/IEC reference applicable here?
+     * It relates to ISO/IEC 24752-8 7.5.6.
      *
      * @param {function} successCallback - The function to be called on success.
      * @param {function} errorCallback - The function to be called on error.
